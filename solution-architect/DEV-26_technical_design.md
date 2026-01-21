@@ -1,113 +1,123 @@
 
-# Technical Design: DEV-26 - API Contract for Frontend-Backend Communication
+# Technical Design Document: DEV-26 - API Contract
 
 **Version:** 1.0
 **Date:** October 26, 2023
 **Author:** Solution Architect Agent
 
-## 1. Introduction
+## 1. Overview
 
-This document outlines the technical design for the API that will serve the Knowlance AI website. The API will handle interactions for the Client Console, MVP subscription, community forum, and dynamic content delivery for team members. This contract ensures a clear separation of concerns between the frontend and backend development teams.
+This document outlines the technical design for the API that will support the Knowlance AI website (V1.0). The API will facilitate communication between the frontend single-page application (SPA) and the backend server. It will handle lead generation, community features, and content delivery.
 
-## 2. System Architecture Overview
+The architecture will be a standard RESTful API served over HTTPS. The backend will be responsible for business logic, data storage, and authentication.
 
-We will implement a RESTful API using a monolithic backend architecture for V1.0. The backend will be responsible for business logic, data storage, and authentication. The frontend will be a single-page application (SPA) that consumes this API.
+## 2. Data Models
 
-- **Authentication:** API endpoints related to the community (creating posts/topics) will be protected and require token-based authentication (JWT).
-- **Data Persistence:** A PostgreSQL database will be used to store all data.
-- **API Versioning:** The API will be versioned under the `/api/v1/` path to allow for future iterations.
+The following data models are the core components of the system. They will be represented as tables in the database and as JSON objects in API requests and responses.
 
-## 3. API Endpoints
+### 2.1. DemoRequest
+Stores submissions from the "Apply for a Demo" form.
 
-The following endpoints will be created to support the features outlined in the PRD.
+- `id`: UUID (Primary Key)
+- `full_name`: String
+- `work_email`: String
+- `company_name`: String
+- `role`: String
+- `project_description`: Text
+- `goal`: Text
+- `technical_requirements`: Text (Optional)
+- `created_at`: Timestamp
 
-### 3.1. Lead Generation & Static Content
+### 2.2. MvpWaitlist
+Stores email sign-ups for the "AI Data Analyst" MVP.
 
-These endpoints are public and do not require authentication.
+- `id`: UUID (Primary Key)
+- `email`: String (Unique)
+- `created_at`: Timestamp
 
-#### 3.1.1. Submit Demo Request
+### 2.3. User
+Represents a registered member of the community.
 
-- **Endpoint:** `POST /api/v1/demo-requests`
-- **Description:** Submits the client's project details from the "Client Console" form.
-- **Request Body:** See `DEV-26_api_spec.yaml` for the detailed schema. Contains fields for name, email, company, role, project description, etc.
-- **Response:**
-    - `201 Created`: On successful submission. Returns the created object.
-    - `400 Bad Request`: If the request body is invalid.
+- `id`: UUID (Primary Key)
+- `username`: String (Unique)
+- `email`: String (Unique)
+- `password_hash`: String
+- `role`: Enum (`MEMBER`, `STAFF`) - `STAFF` role will have a special badge.
+- `created_at`: Timestamp
 
-#### 3.1.2. Subscribe to MVP Launch
+### 2.4. CommunityTopic
+Represents a main topic or thread in the community forum.
 
-- **Endpoint:** `POST /api/v1/mvp-subscriptions`
-- **Description:** Captures an email address for the "AI Data Analyst" MVP waitlist.
-- **Request Body:** `{ "email": "user@example.com" }`
-- **Response:**
-    - `201 Created`: On successful subscription.
-    - `400 Bad Request`: If the email is invalid or already subscribed.
+- `id`: UUID (Primary Key)
+- `title`: String
+- `content`: Text
+- `author_id`: UUID (Foreign Key to `User.id`)
+- `category`: String (e.g., "Latest Trends", "Use Cases")
+- `created_at`: Timestamp
 
-#### 3.1.3. Get Team Members
+### 2.5. CommunityPost
+Represents a reply to a `CommunityTopic`.
 
-- **Endpoint:** `GET /api/v1/team-members`
-- **Description:** Retrieves a list of all core team members to be displayed on the homepage.
-- **Response:**
-    - `200 OK`: Returns an array of team member objects.
+- `id`: UUID (Primary Key)
+- `content`: Text
+- `author_id`: UUID (Foreign Key to `User.id`)
+- `topic_id`: UUID (Foreign Key to `CommunityTopic.id`)
+- `created_at`: Timestamp
 
-### 3.2. Community Forum
+### 2.6. TeamMember
+Stores profile information for the core team.
 
-#### 3.2.1. User Authentication
+- `id`: UUID (Primary Key)
+- `name`: String
+- `title`: String
+- `bio`: Text
+- `headshot_url`: String
+- `linkedin_url`: String (Optional)
+- `github_url`: String (Optional)
 
-- **Endpoint:** `POST /api/v1/auth/register`
-- **Description:** Registers a new user for the community forum.
-- **Request Body:** `{ "username": "string", "email": "string", "password": "string" }`
-- **Response:**
-    - `201 Created`: Returns the new user object (without password).
+## 3. Authentication & Authorization
 
-- **Endpoint:** `POST /api/v1/auth/login`
-- **Description:** Authenticates a user and returns a JWT.
-- **Request Body:** `{ "email": "string", "password": "string" }`
-- **Response:**
-    - `200 OK`: Returns an access token: `{ "accessToken": "jwt_token_string" }`.
+- **Community Features:** Endpoints for creating topics (`POST /community/topics`) and posts (`POST /community/topics/{topicId}/posts`) will be protected.
+- **Authentication Method:** We will use JSON Web Tokens (JWT).
+    1. A user will `POST /auth/login` with their credentials.
+    2. The server will validate the credentials and return a short-lived JWT.
+    3. The frontend will store this JWT and include it in the `Authorization` header for all subsequent protected requests (e.g., `Authorization: Bearer <token>`).
+- **Roles:** The `User.role` field will be used to grant special privileges or display badges on the frontend. For V1, this will just be for display purposes (the "Staff" badge).
 
-#### 3.2.2. Topics
+## 4. API Endpoints
 
-- **Endpoint:** `GET /api/v1/community/topics`
-- **Description:** Retrieves a paginated list of all discussion topics.
-- **Response:** `200 OK`: Returns an array of topic objects, each including author details.
+The API will be versioned under `/api/v1`.
 
-- **Endpoint:** `POST /api/v1/community/topics`
-- **Description:** Creates a new discussion topic. **(Authentication Required)**
-- **Request Body:** `{ "title": "string", "content": "string" }`
-- **Response:** `201 Created`: Returns the newly created topic object.
+### 4.1. Public Endpoints (No Auth Required)
 
-- **Endpoint:** `GET /api/v1/community/topics/{topicId}`
-- **Description:** Retrieves a single topic and all its posts/replies.
-- **Response:** `200 OK`: Returns a single topic object with an array of `posts`.
+- `POST /demo-requests`: Submits the client console form.
+- `POST /mvp-waitlist`: Adds an email to the MVP waitlist.
+- `GET /team-members`: Retrieves a list of all team member profiles.
+- `GET /community/topics`: Retrieves a paginated list of all community topics. Can also be used for the "Community Teaser" section on the homepage by fetching the 3 most recent.
+- `GET /community/topics/{topicId}`: Retrieves a single topic and all its associated posts.
+- `POST /auth/register`: Registers a new user for the community.
+- `POST /auth/login`: Authenticates a user and returns a JWT.
 
-#### 3.2.3. Posts (Replies)
+### 4.2. Protected Endpoints (JWT Auth Required)
 
-- **Endpoint:** `POST /api/v1/community/topics/{topicId}/posts`
-- **Description:** Adds a new post (reply) to a specific topic. **(Authentication Required)**
-- **Request Body:** `{ "content": "string" }`
-- **Response:** `201 Created`: Returns the newly created post object.
-
-## 4. Data Models
-
-The API will use the following data models, which correspond to the database schema. See `DEV-26_db_schema.sql` for table definitions.
-
-- **User:** Represents a registered member of the community.
-- **DemoRequest:** Represents a submission from the client console.
-- **MvpSubscription:** Represents an email signup for the MVP.
-- **TeamMember:** Represents a core Knowlance AI team member.
-- **CommunityTopic:** Represents a main thread in the forum.
-- **CommunityPost:** Represents a reply within a topic.
+- `POST /community/topics`: Creates a new discussion topic. The `author_id` will be extracted from the JWT payload.
+- `POST /community/topics/{topicId}/posts`: Creates a new reply (post) within a topic. The `author_id` will be extracted from the JWT payload.
 
 ## 5. Error Handling
 
-The API will use standard HTTP status codes to indicate the success or failure of a request. Error responses will be in a consistent JSON format:
+The API will use standard HTTP status codes to indicate the success or failure of a request.
+- `200 OK`: Request succeeded.
+- `201 Created`: Resource was successfully created.
+- `400 Bad Request`: The request was malformed (e.g., missing fields, invalid data).
+- `401 Unauthorized`: The request requires authentication, but the token is missing or invalid.
+- `403 Forbidden`: The authenticated user does not have permission to perform the action.
+- `404 Not Found`: The requested resource does not exist.
+- `500 Internal Server Error`: An unexpected server-side error occurred.
 
+Response bodies for errors will contain a machine-readable error code and a human-readable message.
 ```json
 {
-  "error": {
-    "status": 400,
-    "message": "A descriptive error message."
-  }
+  "error": "INVALID_INPUT",
+  "message": "Email address is already registered."
 }
 ```
