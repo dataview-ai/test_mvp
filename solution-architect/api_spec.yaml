@@ -2,13 +2,27 @@ openapi: 3.0.0
 info:
   title: Knowlance AI Website API
   version: 1.0.0
-  description: API specification for the Knowlance AI website frontend-backend communication.
+  description: API for the Knowlance AI website, including demo requests, community forum, and team information.
 
 paths:
+  /waitlist-subscriptions:
+    post:
+      summary: Subscribe to the MVP waitlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaitlistSubscription'
+      responses:
+        '201':
+          description: Successfully subscribed
+        '400':
+          description: Invalid input
+
   /demo-requests:
     post:
       summary: Submit a demo request
-      description: Submits the client's request for a product demo.
       requestBody:
         required: true
         content:
@@ -17,127 +31,114 @@ paths:
               $ref: '#/components/schemas/DemoRequest'
       responses:
         '201':
-          description: Demo request submitted successfully.
+          description: Demo request submitted successfully
         '400':
-          description: Invalid input.
+          description: Invalid input
 
-  /mvp-waitlist:
-    post:
-      summary: Join the MVP waitlist
-      description: Adds a user's email to the waitlist for the AI Data Analyst MVP.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-              required:
-                - email
-      responses:
-        '201':
-          description: Email added to the waitlist.
-        '400':
-          description: Invalid email format.
-
-  /community/topics:
+  /team-members:
     get:
-      summary: Get discussion topics
-      description: Retrieves a list of topics from the community forum.
-      parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            default: 1
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            default: 10
+      summary: Get the list of team members
       responses:
         '200':
-          description: A list of topics.
+          description: A list of team members
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Topic'
-    post:
-      summary: Create a new topic
-      description: Creates a new discussion topic in the community forum.
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NewTopic'
-      responses:
-        '201':
-          description: Topic created successfully.
-        '400':
-          description: Invalid input.
-        '401':
-          description: Unauthorized.
+                  $ref: '#/components/schemas/TeamMember'
 
-  /community/topics/{topicId}:
+  /community/topics:
     get:
-      summary: Get a topic by ID
-      description: Retrieves a single topic and its posts by its ID.
+      summary: Get a list of community topics
       parameters:
-        - name: topicId
-          in: path
-          required: true
+        - in: query
+          name: sort
           schema:
             type: string
+            enum: [recent, popular]
+          description: Sort order for topics
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of topics to return
       responses:
         '200':
-          description: The requested topic with its posts.
+          description: A list of community topics
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicWithPosts'
-        '404':
-          description: Topic not found.
-
-  /community/topics/{topicId}/posts:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommunityTopic'
     post:
-      summary: Post a reply to a topic
-      description: Adds a new post (reply) to an existing topic.
+      summary: Create a new community topic
       security:
         - bearerAuth: []
-      parameters:
-        - name: topicId
-          in: path
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewPost'
+              $ref: '#/components/schemas/NewCommunityTopic'
       responses:
         '201':
-          description: Reply posted successfully.
+          description: Topic created successfully
         '400':
-          description: Invalid input.
+          description: Invalid input
         '401':
-          description: Unauthorized.
+          description: Unauthorized
+
+  /community/topics/{topicId}:
+    get:
+      summary: Get a single community topic with replies
+      parameters:
+        - in: path
+          name: topicId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The community topic
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommunityTopicWithReplies'
         '404':
-          description: Topic not found.
+          description: Topic not found
+
+  /community/topics/{topicId}/replies:
+    post:
+      summary: Post a reply to a community topic
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: topicId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewReply'
+      responses:
+        '201':
+          description: Reply posted successfully
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '404':
+          description: Topic not found
 
   /users/register:
     post:
       summary: Register a new user
-      description: Registers a new user for the community.
       requestBody:
         required: true
         content:
@@ -146,14 +147,13 @@ paths:
               $ref: '#/components/schemas/UserRegistration'
       responses:
         '201':
-          description: User registered successfully.
+          description: User registered successfully
         '400':
-          description: Invalid input or user already exists.
+          description: Invalid input or user already exists
 
   /users/login:
     post:
-      summary: User login
-      description: Authenticates a user and returns a JWT token.
+      summary: Log in a user
       requestBody:
         required: true
         content:
@@ -162,7 +162,7 @@ paths:
               $ref: '#/components/schemas/UserLogin'
       responses:
         '200':
-          description: Login successful.
+          description: Successfully logged in
           content:
             application/json:
               schema:
@@ -171,10 +171,19 @@ paths:
                   token:
                     type: string
         '401':
-          description: Invalid credentials.
+          description: Invalid credentials
 
 components:
   schemas:
+    WaitlistSubscription:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+        - email
+
     DemoRequest:
       type: object
       properties:
@@ -196,16 +205,34 @@ components:
       required:
         - fullName
         - workEmail
-        - companyName
-        - role
         - challenge
-        - objective
 
-    Topic:
+    TeamMember:
       type: object
       properties:
         id:
+          type: integer
+        name:
           type: string
+        title:
+          type: string
+        bio:
+          type: string
+        imageUrl:
+          type: string
+          format: uri
+        linkedinUrl:
+          type: string
+          format: uri
+        githubUrl:
+          type: string
+          format: uri
+
+    CommunityTopic:
+      type: object
+      properties:
+        id:
+          type: integer
         title:
           type: string
         author:
@@ -213,10 +240,20 @@ components:
         createdAt:
           type: string
           format: date-time
-        postCount:
+        repliesCount:
           type: integer
 
-    NewTopic:
+    CommunityTopicWithReplies:
+      allOf:
+        - $ref: '#/components/schemas/CommunityTopic'
+        - type: object
+          properties:
+            replies:
+              type: array
+              items:
+                $ref: '#/components/schemas/CommunityReply'
+
+    NewCommunityTopic:
       type: object
       properties:
         title:
@@ -227,21 +264,11 @@ components:
         - title
         - content
 
-    TopicWithPosts:
-      allOf:
-        - $ref: '#/components/schemas/Topic'
-        - type: object
-          properties:
-            posts:
-              type: array
-              items:
-                $ref: '#/components/schemas/Post'
-
-    Post:
+    CommunityReply:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         author:
           $ref: '#/components/schemas/User'
         content:
@@ -250,7 +277,7 @@ components:
           type: string
           format: date-time
 
-    NewPost:
+    NewReply:
       type: object
       properties:
         content:
@@ -262,9 +289,12 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         username:
           type: string
+        avatarUrl:
+          type: string
+          format: uri
         isStaff:
           type: boolean
 
