@@ -1,0 +1,186 @@
+{
+    "mission": "Launch the 'Genesis' Digital Twin project by executing a flawless, secure, and on-brand sales event for 50 limited-edition luxury watches. The MVP focuses on a fair online drop, secure checkout, and the reliable delivery of both the physical watch and its corresponding NFT digital twin to the owner's wallet.",
+    "workstreams": {
+        "foundation": "Establish the core infrastructure, architecture, and security posture for the project.",
+        "pre_purchase": "Develop the user journey from product discovery to successful purchase, including the virtual queue and checkout.",
+        "post_purchase": "Develop the owner's experience after purchase, including delivery scheduling, wallet onboarding, and NFT fulfillment."
+    },
+    "tickets": [
+        {
+            "id": "1",
+            "summary": "Foundation: Define overall system architecture and data models",
+            "target_agent": "agent-architect",
+            "gherkin_ac": "Given the PRD's technical and data integrity requirements\nWhen I design the system architecture\nThen the design must include service boundaries for web, API, queue, and blockchain services.\nAnd it must define the schemas for the User, Order, Asset Master, and Delivery records.\nAnd it must specify the technology stack for front-end, back-end, and database.",
+            "depends_on": []
+        },
+        {
+            "id": "2",
+            "summary": "Foundation: Provision cloud infrastructure and CI/CD pipeline",
+            "target_agent": "agent-cloud",
+            "gherkin_ac": "Given the need for a scalable and reliable platform\nWhen I provision the cloud environment using IaC\nThen an auto-scaling, containerized or serverless hosting environment must be created.\nAnd a CI/CD pipeline for automated testing and deployment must be in place.\nAnd environments for development, staging, and production must be configured.",
+            "depends_on": []
+        },
+        {
+            "id": "3",
+            "summary": "Foundation: Configure WAF, DDoS protection, and security monitoring",
+            "target_agent": "agent-cloud",
+            "gherkin_ac": "Given the high-value nature of the transaction\nWhen I configure the network and application security\nThen a Web Application Firewall (WAF) and DDoS mitigation service must be active.\nAnd logging and alerting for security events must be configured.\nAnd all data transport must be enforced over TLS 1.2+.",
+            "depends_on": [
+                "2"
+            ]
+        },
+        {
+            "id": "4",
+            "summary": "Pre-Purchase: Architect the Product Discovery Page (US-101)",
+            "target_agent": "agent-architect",
+            "gherkin_ac": "Given the need for a rich product page\nWhen I design the page architecture\nThen I must define the API contract for fetching product content from a CMS.\nAnd I must specify the UX flow for the 360-degree view and video player.\nAnd the design must accommodate high-resolution, zoomable images.",
+            "depends_on": [
+                "1"
+            ]
+        },
+        {
+            "id": "5",
+            "summary": "Pre-Purchase: Implement the Genesis Product Page front-end (US-101)",
+            "target_agent": "agent-dev",
+            "gherkin_ac": "Scenario: Viewing the Genesis Product Page\n  Given I am a visitor on the website\n  When I navigate to the \"Genesis\" product page\n  Then I must see high-resolution, zoomable images of the watch.\n  And I must see an interactive 360-degree view of the watch.\n  And I must be able to play a high-quality promotional video.\n  And I should see a dedicated section explaining the \"Digital Twin\" NFT in simple, benefit-driven terms.\n  And the page content must be loaded from a Content Management System (CMS).",
+            "depends_on": [
+                "4"
+            ]
+        },
+        {
+            "id": "6",
+            "summary": "Pre-Purchase: Architect the Virtual Queue and Fair Drop System (US-102)",
+            "target_agent": "agent-architect",
+            "gherkin_ac": "Given the requirement for a fair drop\nWhen I design the queueing system\nThen the design must include a bot-resistant entry mechanism.\nAnd it must define the logic for user selection and redirection to checkout.\nAnd it must specify the API for managing queue state and real-time stock counters.",
+            "depends_on": [
+                "1"
+            ]
+        },
+        {
+            "id": "7",
+            "summary": "Pre-Purchase: Implement the Virtual Queue and Purchase Limit Logic (US-102)",
+            "target_agent": "agent-dev",
+            "gherkin_ac": "Scenario: User enters the queue and is selected to purchase\n  Given the drop is active and has not sold out\n  And I am logged into my verified user account\n  When I click the \"Enter Queue\" button on the product page\n  Then I should be placed into a virtual queue.\n  And when I am selected from the queue, I am redirected to the checkout page.\n  And a 10-minute checkout timer starts.",
+            "depends_on": [
+                "6"
+            ]
+        },
+        {
+            "id": "8",
+            "summary": "Pre-Purchase: Architect the Secure Checkout Flow (US-103)",
+            "target_agent": "agent-architect",
+            "gherkin_ac": "Given the need for a secure, high-value transaction\nWhen I design the checkout flow\nThen the design must be PCI DSS compliant.\nAnd it must detail the payment pre-authorization and admin-triggered capture logic.\nAnd it must define the API endpoints and data flow for creating an Order Record.",
+            "depends_on": [
+                "1"
+            ]
+        },
+        {
+            "id": "9",
+            "summary": "Pre-Purchase: Implement the Secure Checkout and Payment Pre-Authorization (US-103)",
+            "target_agent": "agent-dev",
+            "gherkin_ac": "Scenario: Successful High-Value Checkout\n  Given I have been selected from the queue and am in the checkout flow\n  And I have entered my valid shipping and payment details\n  When I click \"Confirm Purchase\"\n  Then my payment method should be pre-authorized for the full amount.\n  And I should be redirected to an \"Order Confirmation\" page with my order summary.\n  And I should receive an order confirmation email.",
+            "depends_on": [
+                "8"
+            ]
+        },
+        {
+            "id": "10",
+            "summary": "Pre-Purchase: QA Verification for Product Page, Queue, and Checkout",
+            "target_agent": "agent-qa",
+            "gherkin_ac": "Given the Pre-Purchase features are implemented\nWhen I perform end-to-end testing\nThen all acceptance criteria for US-101, US-102, and US-103 must be met.\nAnd the purchase limit of one per customer must be enforced.\nAnd the checkout timer must correctly expire the session.",
+            "depends_on": [
+                "5",
+                "7",
+                "9"
+            ]
+        },
+        {
+            "id": "11",
+            "summary": "Post-Purchase: Architect the Owner's Portal and Delivery Scheduling (US-201, US-204)",
+            "target_agent": "agent-architect",
+            "gherkin_ac": "Given the need for a premium post-purchase experience\nWhen I design the 'My Collection' portal\nThen the design must include a secure messaging system between owner and concierge.\nAnd it must define the API and UX for the white-glove delivery scheduling interface.\nAnd it must specify how delivery status is tracked and displayed.",
+            "depends_on": [
+                "1"
+            ]
+        },
+        {
+            "id": "12",
+            "summary": "Post-Purchase: Implement Delivery Scheduling Interface (US-201)",
+            "target_agent": "agent-dev",
+            "gherkin_ac": "Scenario: Scheduling concierge delivery\n  Given I have successfully purchased the watch and am on the order confirmation page\n  When I click the \"Schedule Your Delivery\" button\n  Then I am taken to a scheduling interface.\n  And I can select from available dates and time slots for my delivery.\n  And upon confirming a slot, I receive a calendar invitation via email.",
+            "depends_on": [
+                "11"
+            ]
+        },
+        {
+            "id": "13",
+            "summary": "Post-Purchase: Architect Wallet Submission and NFT Transfer Automation (US-202, US-203)",
+            "target_agent": "agent-architect",
+            "gherkin_ac": "Given the need to deliver the digital twin\nWhen I design the NFT fulfillment process\nThen the design must include a secure method for users to submit a wallet address.\nAnd it must define an automated, trigger-based system for transferring the NFT upon delivery confirmation.\nAnd it must include robust error handling and a retry mechanism for blockchain transactions.",
+            "depends_on": [
+                "1"
+            ]
+        },
+        {
+            "id": "14",
+            "summary": "Post-Purchase: Implement Wallet Address Submission (US-202)",
+            "target_agent": "agent-dev",
+            "gherkin_ac": "Scenario: User adds and verifies a wallet address\n  Given I am logged into my account and navigating the \"My Collection\" portal\n  When I go to the \"Add Wallet\" section\n  Then I see a field to paste my public wallet address (e.g., 0x...).\n  And the system validates that the address is a syntactically correct format.\n  And after submitting, the status of my NFT delivery is \"Pending Wallet Verification\".",
+            "depends_on": [
+                "13"
+            ]
+        },
+        {
+            "id": "15",
+            "summary": "Post-Purchase: Implement Automated NFT Transfer (US-203)",
+            "target_agent": "agent-dev",
+            "gherkin_ac": "Scenario: NFT is transferred upon delivery confirmation\n  Given the concierge has marked the delivery as \"Complete\" in the admin system\n  When the automated transfer job runs\n  Then the NFT corresponding to my watch's unique serial number is transferred to my verified wallet address.\n  And the NFT's metadata correctly includes the model, serial number, and date of manufacture.\n  And the status of my NFT in the \"My Collection\" portal changes to \"Delivered\".",
+            "depends_on": [
+                "13"
+            ]
+        },
+        {
+            "id": "16",
+            "summary": "Post-Purchase: Implement Owner's Portal UI (US-204)",
+            "target_agent": "agent-dev",
+            "gherkin_ac": "Scenario: Viewing the owner portal\n  Given I am a new owner and I log into my account\n  When I navigate to \"My Collection\"\n  Then I see a visual representation of my \"Genesis\" watch.\n  And I see the current status of my delivery (e.g., \"Scheduled\", \"In Transit\", \"Delivered\").\n  And I can access a secure messaging thread to communicate with my assigned concierge.",
+            "depends_on": [
+                "11"
+            ]
+        },
+        {
+            "id": "17",
+            "summary": "Post-Purchase: QA Verification for Owner Portal and NFT Delivery",
+            "target_agent": "agent-qa",
+            "gherkin_ac": "Given the Post-Purchase features are implemented\nWhen I perform end-to-end testing on a testnet\nThen all acceptance criteria for US-201, US-202, US-203, and US-204 must be met.\nAnd scheduling a delivery must generate a correct calendar invite.\nAnd confirming delivery must trigger the NFT transfer to the correct wallet.",
+            "depends_on": [
+                "12",
+                "14",
+                "15",
+                "16"
+            ]
+        },
+        {
+            "id": "18",
+            "summary": "Foundation: Perform Load and Performance Testing (NFR1)",
+            "target_agent": "agent-qa",
+            "gherkin_ac": "Given the application is deployed to a staging environment\nWhen I simulate a load of 10,000 concurrent users during a drop event\nThen API endpoints must maintain an average response time of <200ms.\nAnd key pages must achieve a Google PageSpeed score of 90+.\nAnd the system must scale without failure.",
+            "depends_on": [
+                "3",
+                "10",
+                "17"
+            ]
+        },
+        {
+            "id": "19",
+            "summary": "Foundation: Perform Security and Penetration Testing (NFR2)",
+            "target_agent": "agent-qa",
+            "gherkin_ac": "Given the application is deployed to a staging environment\nWhen I perform security vulnerability scanning and penetration testing\nThen the application must show no critical vulnerabilities from the OWASP Top 10.\nAnd bot mitigation strategies must be effective against basic scripting.\nAnd all data must be confirmed as encrypted at rest and in transit.",
+            "depends_on": [
+                "3",
+                "10",
+                "17"
+            ]
+        }
+    ]
+}
