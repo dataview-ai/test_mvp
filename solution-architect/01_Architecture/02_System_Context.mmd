@@ -1,0 +1,15 @@
+C4Context
+    title System Context diagram for SR Watch Store
+
+    Person(user, "Customer", "A person who browses and purchases watches.")
+
+    System(system, "SR Watch Store", "The online platform for browsing and purchasing watches.")
+
+    System_Ext(payment_gateway, "Payment Gateway", "Processes customer payments.")
+    System_Ext(shipping_provider, "Shipping Provider", "Handles order fulfillment and shipping.")
+    System_Ext(identity_provider, "Identity Provider", "Manages user authentication.")
+
+    Rel(user, system, "Uses")
+    Rel(system, payment_gateway, "Processes payments using")
+    Rel(system, shipping_provider, "Fulfills orders via")
+    Rel(system, identity_provider, "Authenticates users with")
