@@ -1,0 +1,1 @@
+// Placeholder for automated NFT transfer (US-203)
