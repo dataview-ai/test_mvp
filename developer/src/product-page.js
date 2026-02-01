@@ -1,1 +1,0 @@
-// Placeholder for product page front-end code (US-101)
