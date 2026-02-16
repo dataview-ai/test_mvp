@@ -1,398 +1,373 @@
-Master Product Requirements Document (PRD) v2.0
-Project: SR – Luxury Watch E-Commerce Platform
 
-Version: 2.0
-Author: Product & Platform Team
-Status: DraftS
-Brand: SR
 
-1. Executive Summary
+# **MASTER PRODUCT REQUIREMENTS DOCUMENT (PRD)**
 
-This document defines the Minimum Viable Product (MVP) for SR, a premium e-commerce platform specializing in high-quality luxury watches.
+## Project: SR – Luxury Watch E-Commerce Platform
 
-SR aims to deliver:
+## Version: 1.0
 
-A refined luxury shopping experience
+## Status: Draft
 
-High-performance and secure checkout
+## Product Owner: SR Brand
 
-Controlled limited-edition product drops
+## Prepared By: Product Management
 
-Premium post-purchase customer engagement
+---
 
-Scalable infrastructure for future expansion
+# 1. Executive Summary
 
-The MVP focuses on:
+SR is a premium luxury watch e-commerce platform designed to provide a refined digital shopping experience for customers worldwide.
 
-Core watch catalog
+The platform will enable users to:
 
-Secure checkout
+* Browse luxury watches
+* Create accounts and log in
+* Add watches to cart
+* Securely complete purchases
+* Track order delivery
+* Manage their account and purchase history
 
-Inventory management
+The focus of the MVP is:
 
-Delivery tracking
+* High-end user experience
+* Secure transactions
+* Reliable inventory management
+* Efficient order fulfillment
+* Scalable architecture for future growth
 
-Customer account portal
+---
 
-Drop event management (optional limited collections)
+# 2. Product Vision
 
-Out of scope (Phase 1):
+SR aims to become a trusted luxury watch retailer by delivering:
 
-NFT integrations
+* Elegant and premium digital experience
+* Secure and frictionless checkout
+* Transparent delivery process
+* Reliable customer support
+* Scalable global commerce infrastructure
 
-Blockchain-based ownership
+The platform must reflect luxury, exclusivity, and trust.
 
-Community token features
+---
 
-Subscription resale marketplace
+# 3. Target Users
 
-2. Product Vision
+## 3.1 Luxury Buyers
 
-SR is positioned as:
+* Age 30–60
+* High purchasing power
+* Value authenticity and brand prestige
 
-A luxury-focused, digital-first watch brand
+## 3.2 Young Professionals
 
-A premium online retail experience
+* Age 25–40
+* Interested in premium lifestyle products
+* Expect seamless digital experience
 
-A controlled limited-collection drop platform
+## 3.3 Gift Buyers
 
-A scalable foundation for global watch sales
+* Purchasing watches as premium gifts
+* Need assurance of authenticity and delivery reliability
 
-Primary Goals:
+---
 
-Establish SR as a luxury watch e-commerce brand.
+# 4. Core Features – MVP Scope
 
-Execute high-performance limited drops (if applicable).
+---
 
-Deliver white-glove customer experience.
+# 4.1 User Account System
 
-Build trust through security and reliability.
+### User Registration
 
-Enable future expansion (multi-product lines, global logistics).
+* Email-based registration
+* Password protection
+* Email verification
+* Optional social login (Phase 2)
 
-3. User Personas
-Persona 1 – Luxury Collector
+### User Login
 
-Age 35–60
+* Secure authentication
+* Session management
+* Password reset functionality
 
-Values craftsmanship and exclusivity
+### User Profile
 
-Expects premium UX and secure checkout
+* Personal details management
+* Address management
+* Saved payment methods (securely tokenized)
+* Order history access
 
-Persona 2 – Tech-Savvy Professional
+---
 
-Age 25–40
+# 4.2 Product Catalog
 
-Prefers online-first experience
+### Product Listing Page
 
-Values performance and transparency
+* Grid and list view
+* Filter by:
 
-Persona 3 – Aspirational Buyer
+  * Brand
+  * Price range
+  * Collection
+  * Gender
+  * Material
+* Sorting options (price, popularity, newest)
 
-Age 22–35
+### Product Detail Page
 
-Wants entry into luxury market
+* High-resolution product images
+* Zoom functionality
+* Product specifications:
 
-Needs trust signals and clear information
+  * Movement type
+  * Case material
+  * Strap type
+  * Water resistance
+  * Warranty information
+* Stock availability indicator
+* Add to cart button
 
-4. Core Functional Requirements
-Phase 1: Product Discovery & Purchase
-US-101: Product Exploration
+---
 
-As a: Customer
-I want to: Explore watches with high-quality visuals and details
-So that: I can make an informed purchase decision
+# 4.3 Shopping Cart
 
-Acceptance Criteria:
+* Add/remove items
+* Update quantity
+* Price calculation
+* Tax calculation
+* Shipping cost estimation
+* Clear cart functionality
 
-High-resolution product images
+---
 
-Zoom functionality
+# 4.4 Checkout Process
 
-360-degree view (optional)
+### Step 1 – Address
 
-Detailed specifications (movement, materials, size)
+* Shipping address selection or entry
 
-Brand story section
+### Step 2 – Payment
 
-Customer reviews section
+* Integration with secure payment gateway
+* Support:
 
-CMS-powered content management
+  * Credit/debit cards
+  * UPI (if applicable)
+  * Net banking (region-based)
+* Payment confirmation
 
-US-102: Inventory & Limited Drop Handling
+### Step 3 – Review & Confirmation
 
-As a: Customer
-I want to: Purchase limited models fairly
-So that: I trust the system during high-demand events
+* Order summary
+* Total price
+* Final confirmation
+* Order success page
 
-Acceptance Criteria:
+### Post-Checkout
 
-Real-time stock counter
+* Email confirmation
+* Order ID generation
+* Payment transaction ID storage
 
-Purchase limit per user (configurable)
+---
 
-Optional queue system for limited drops
+# 4.5 Order Management
 
-Anti-bot protection
+### Customer Side
 
-Purchase locking during checkout
+* View order status:
 
-US-103: Secure Checkout
+  * Processing
+  * Shipped
+  * Delivered
+* Track shipment (via logistics partner integration)
+* Download invoice
 
-As a: Customer
-I want to: Complete purchase securely
-So that: I trust SR with my financial data
+### Admin Side
 
-Acceptance Criteria:
+* Order dashboard
+* Payment status
+* Shipping status update
+* Refund management
+* Manual order override (if needed)
 
-Guest checkout supported
+---
 
-Account-based checkout supported
+# 4.6 Inventory Management
 
-Secure payment gateway (Stripe / Razorpay / etc.)
+* SKU-based inventory tracking
+* Automatic stock deduction
+* Low-stock alert
+* Out-of-stock status display
+* Admin restocking capability
 
-Payment pre-authorization (optional for high-value orders)
+---
 
-Order confirmation page
+# 4.7 Delivery & Logistics
 
-Confirmation email
+* Integration with shipping providers
+* Real-time tracking updates
+* Estimated delivery timeline
+* Delivery confirmation status
 
-Admin-side capture or release mechanism (if pre-authorized)
+---
 
-5. Post-Purchase Experience
-US-201: Order Tracking
+# 4.8 Customer Support
 
-As a: Customer
-I want to: Track my order
-So that: I stay informed about delivery
+* Contact form
+* Ticket submission
+* Order-based support request
+* Admin response interface
 
-Acceptance Criteria:
+---
 
-Order tracking page
+# 5. Non-Functional Requirements
 
-Shipping status updates
+---
 
-Estimated delivery timeline
+## 5.1 Performance
 
-SMS/email notifications
+* Page load time < 3 seconds
+* Support 5,000 concurrent users (MVP target)
+* Scalable cloud infrastructure
+* CDN integration for global performance
 
-US-202: Customer Account Portal
+---
 
-As a: Customer
-I want to: Access my profile and order history
-So that: I can manage my purchases
+## 5.2 Security
 
-Acceptance Criteria:
+* HTTPS mandatory
+* Encrypted user data storage
+* PCI DSS compliant payment integration
+* Protection against common vulnerabilities (OWASP Top 10)
+* Admin role-based access control
 
-Profile management
+---
 
-Address book
+## 5.3 Usability
 
-Order history
+* Responsive design (mobile, tablet, desktop)
+* Luxury-focused UI/UX
+* Clean checkout flow (≤ 3 steps)
+* Accessibility standards compliance
 
-Invoice download
+---
 
-Support request system
+## 5.4 Reliability
 
-US-203: Premium Support Communication
+* 99.9% uptime
+* Regular database backups
+* Disaster recovery strategy
+* Monitoring and alerting
 
-As a: Customer
-I want to: Communicate with support
-So that: I receive premium service
+---
 
-Acceptance Criteria:
+# 6. Data Model Overview
 
-Secure message thread system
+---
 
-Ticketing integration
+## 6.1 User Entity
 
-Timestamped communication log
+* User ID
+* Email
+* Password (hashed)
+* Addresses
+* Order history
 
-Admin support dashboard
+---
 
-6. Admin & Operations Requirements
-Inventory Management
+## 6.2 Product Entity
 
-SKU management
+* SKU
+* Product name
+* Description
+* Price
+* Inventory count
+* Category
+* Specifications
+* Warranty info
 
-Stock quantity control
+---
 
-Automatic stock deduction
+## 6.3 Order Entity
 
-Manual override
+* Order ID
+* User ID
+* Product SKUs
+* Quantity
+* Payment transaction ID
+* Shipping status
+* Delivery confirmation
 
-Drop scheduling capability
+---
 
-Order Management
+# 7. Admin Panel Requirements
 
-Order status tracking
+* Product management
+* Inventory updates
+* Order monitoring
+* Payment reconciliation
+* Refund processing
+* Analytics dashboard (basic metrics)
 
-Payment status tracking
+---
 
-Shipment assignment
+# 8. Analytics & Reporting (MVP Basic)
 
-Refund handling
+* Total sales
+* Daily orders
+* Revenue by product
+* Conversion rate
+* Inventory turnover
 
-Audit trail logging
+---
 
-Delivery & Logistics Integration
+# 9. Future Enhancements (Post-MVP)
 
-Integration with shipping provider APIs
+* Wishlist functionality
+* Loyalty program
+* Reviews & ratings
+* Personalized recommendations
+* Mobile application
+* International shipping expansion
+* Membership tiers
+* Limited edition drops
+* Watch customization tool
 
-Delivery confirmation tracking
+---
 
-Address validation
+# 10. Success Metrics
 
-International shipping support (future)
+* Conversion rate ≥ 2–3%
+* Cart abandonment rate < 60%
+* Order fulfillment accuracy ≥ 99%
+* Customer return rate < 5%
+* Uptime ≥ 99.9%
 
-7. Non-Functional Requirements (NFR)
-NFR1: Performance
+---
 
-PageSpeed score ≥ 90 (desktop)
+# 11. Risks & Mitigation
 
-LCP < 2.5 seconds
+| Risk               | Mitigation                     |
+| ------------------ | ------------------------------ |
+| Payment fraud      | Fraud detection integration    |
+| Inventory mismatch | Real-time stock locking        |
+| Delivery delays    | Reliable logistics partner     |
+| Security breach    | Strong encryption & monitoring |
+| Scalability issues | Cloud auto-scaling             |
 
-API response time < 200ms under peak load
+---
 
-Support 10,000+ concurrent users during drop events
+# Final Product Positioning
 
-Auto-scaling infrastructure (AWS / GCP / Kubernetes)
+SR will operate as a:
 
-NFR2: Security
+* Premium luxury watch retailer
+* Secure and trustworthy e-commerce platform
+* Elegant digital storefront
+* Scalable brand foundation for global expansion
 
-HTTPS enforced
+---
 
-Data encryption at rest and in transit
 
-PCI DSS compliant checkout
-
-Web Application Firewall (WAF)
-
-DDoS protection
-
-Protection against OWASP Top 10
-
-Bot mitigation during drops
-
-NFR3: Usability & Design
-
-Pixel-perfect luxury UI
-
-Fully responsive
-
-Checkout ≤ 3 steps
-
-Accessibility compliant (WCAG AA)
-
-NFR4: Reliability
-
-99.9% uptime baseline
-
-99.99% during launch windows
-
-Backup and disaster recovery plan
-
-Monitoring & alerting system
-
-8. Data Integrity Model
-User Record
-
-Fields:
-
-User ID
-
-Email (verified)
-
-Password (hashed)
-
-Shipping address
-
-Billing address
-
-Communication history
-
-Integrity Rule:
-
-Single canonical user record
-
-No duplicate accounts
-
-Order Record
-
-Fields:
-
-Order ID
-
-User ID
-
-SKU
-
-Price
-
-Payment transaction ID
-
-Order status
-
-Delivery status
-
-Integrity Rule:
-
-Immutable once confirmed
-
-Linked to payment gateway reference
-
-Product Master Record
-
-Fields:
-
-SKU
-
-Model name
-
-Description
-
-Price
-
-Stock quantity
-
-Manufacturing batch
-
-Warranty details
-
-Integrity Rule:
-
-Unique SKU
-
-Accurate stock tracking
-
-Version-controlled updates
-
-9. Future Roadmap (Post-MVP)
-
-Loyalty program
-
-Limited-edition drop automation
-
-Resale marketplace
-
-Membership club
-
-Mobile application
-
-Global warehousing
-
-AI-based personalization
-
-Watch customization configurator
-
-10. Strategic Positioning
-
-SR will position itself as:
-
-Premium digital luxury watch brand
-
-High-performance e-commerce experience
-
-Drop-capable platform
-
-Secure & scalable infrastructur
